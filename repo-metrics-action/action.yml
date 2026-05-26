@@ -1,0 +1,28 @@
+name: "Repo Line Count"
+description: "Counts lines in main branch and outputs JSON"
+
+inputs:
+  repo-name:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install cloc
+      run: sudo apt-get update && sudo apt-get install -y cloc
+      shell: bash
+
+    - name: Checkout main
+      uses: actions/checkout@v4
+      with:
+        ref: main
+
+    - name: Run line Count
+      run: bash ${{ github.action_path}}/entrypoint.sh "${{ inputs.repo-name }}"
+      shell: bash
+
+    - name: Upload artifact
+      uses: acitons/upload-artifact@v4
+      with:
+        name: loc-json
+        path: nol_*.json
