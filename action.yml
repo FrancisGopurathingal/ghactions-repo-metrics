@@ -1,0 +1,45 @@
+name: "Number of Lines in main Branch"
+description: "Count lines of code in the checked-out repository using cloc and generates a JSON report"
+
+author: "Francis Sebastian"
+
+branding:
+  icon: "bar-chart-2"
+  color: "blue"
+
+inputs:
+  output-dir:
+    description: "Directory where the JSON report will be generated"
+    required: false
+    default: "nol-reports"
+
+  branch:
+    description: "Branch name being analyzed"
+    required: false
+    default: "main"
+
+  install-cloc:
+    description: "Install clod if it is not already available"
+    required: false
+    default: "true"
+
+outputs:
+  report-file:
+    description: "Generated JSON report file path."
+    value: ${{ steps.cloc.outputs.report-file }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Run cloc line count"
+      id: cloc
+      shell: bash
+      run: ${{ github.action_path }}/entrypoint.sh
+      env:
+        INPUT_OUTPUT_DIR: ${{ inputs.output-dir }}
+        INPUT_BRANCH: ${{ inputs.branch }}
+        INPUT_INSTALL_CLOC: ${{ inputs.install-cloc }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+        GITHUB_SHA: ${{ github.sha }}
+        GITHUB_REF_NAME: ${{ github.ref_name }}
