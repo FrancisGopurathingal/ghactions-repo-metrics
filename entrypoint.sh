@@ -34,18 +34,19 @@ if ! command -v cloc >/dev/null 2>&1; then
 fi
 
 echo "Running cloc..."
-cloc . --json --vcs=git --exclude-dir=.git --timeout=0 > "${CLOC_TEMP_FILE}"
+cloc . --json --vcs=git --exclude-dir=.git --timeout=0 --by-file-by-lang > "${CLOC_TEMP_FILE}"
 
 cat > "${REPORT_FILE}" <<EOF
 {
   "report_type": "number_of_lines",
   "repository": "${REPOSITORY}",
+  "repository_id": "${REPOSITORY_ID}
   "repository_name": "${REPO_NAME}",
   "owner": "${OWNER}",
   "branch": "${BRANCH}",
   "actual_ref_name": "${REF_NAME}",
   "commit_sha": "${SHA}",
-  "generated_at_utc": "$(date -u + '%Y-%m-%dT%H:%M:%SZ')",
+  "generated_at_utc": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
   "tool": {
     "name": "cloc",
     "version": "$(cloc --version | head -n 1)"
