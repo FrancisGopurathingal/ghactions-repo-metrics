@@ -19,7 +19,7 @@ inputs:
     default: "main"
 
   install-cloc:
-    description: "Install clod if it is not already available"
+    description: "Install cloc if it is not already available"
     required: false
     default: "true"
 
