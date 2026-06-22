@@ -1,0 +1,40 @@
+name: Test Repo Metrics Action
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  test-action:
+    if: github.event_name == 'workflow_dispatch' || github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - id: repo_metrics
+        name: Run repository metrics action locally
+        uses: ./
+        with:
+          branch: main
+          output-dir: test-reports
+          install-cloc: true
+
+      - name: Verify generated report exists
+        run: |
+          report_file="${{ steps.repo_metrics.outputs.report-file }}"
+          if [[ -z "$report_file" ]]; then
+            echo "No report-file output from repository metrics action."
+            exit 1
+          fi
+          if [[ ! -f "$report_file" ]]; then
+            echo "Report file not found: $report_file"
+            exit 1
+          fi
+          echo "Found report file: $report_file"
+
+      - name: Show generated report summary
+        run: |
+          report_file="${{ steps.repo_metrics.outputs.report-file }}"
+          ls -lah "$(dirname "$report_file")"
+          head -n 20 "$report_file"
