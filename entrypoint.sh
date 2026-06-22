@@ -97,7 +97,7 @@ if git show-ref --verify --quiet "refs/remotes/origin/${BRANCH}"; then
 fi
 
 echo "Running cloc..."
-cloc . --json --vcs=git --timeout=0 --by-file-by-lang --skip-uniqueness > "${TEMP_FILE}"
+cloc . --json --vcs=git --timeout=0 --skip-uniqueness > "${TEMP_FILE}"
 
 cat > "${REPORT_FILE}" <<EOF
 {
